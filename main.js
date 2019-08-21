@@ -22,7 +22,7 @@ function createWindow () {
 
   consoleWindow.on('closed', function () { consoleWindow = null, forWindow = null })
   forWindow.on('closed', function () { forWindow = null, consoleWindow = null })
-  log.info(':: Launching app');
+  log.info(' Launching app');
 }
 
 app.on('ready', createWindow)

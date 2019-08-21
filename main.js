@@ -1,4 +1,6 @@
 const {app, BrowserWindow} = require('electron')
+const log = require('electron-log');
+//log.transports.file.fileName = __dirname + '/app.log';
 const electron = require('electron');
 let consoleWindow, forWindow
 
@@ -20,6 +22,7 @@ function createWindow () {
 
   consoleWindow.on('closed', function () { consoleWindow = null, forWindow = null })
   forWindow.on('closed', function () { forWindow = null, consoleWindow = null })
+  log.info(':: Launching app');
 }
 
 app.on('ready', createWindow)

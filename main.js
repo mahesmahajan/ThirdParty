@@ -1,6 +1,6 @@
 const {app, BrowserWindow} = require('electron')
 const log = require('electron-log');
-//log.transports.file.fileName = __dirname + '/app.log';
+log.transports.file.file = __dirname + '/thirdParty.log';
 const electron = require('electron');
 let consoleWindow, forWindow
 

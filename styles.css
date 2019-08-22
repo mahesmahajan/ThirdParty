@@ -1,0 +1,276 @@
+@font-face {
+    font-family: SegoeUI-Semibold;
+    src: url(./fonts/seguisb.ttf);
+}
+
+div {
+    font-family: SegoeUI-Semibold;
+}
+
+html {
+    position: reletive;
+}
+
+body {
+    margin: 0;
+    background-color: #201f1f;
+    overflow: hidden;
+    font-family: SegoeUI-Semibold;
+}
+
+.loader {
+    background-image: url("https://thumbs.gfycat.com/NearAggravatingJabiru-size_restricted.gif");
+    display: block;
+    background-size: cover;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 102vh;
+    z-index: 9999;
+    background-position: center;
+    position: absolute;
+}
+
+.loader.hide {
+    display: none;
+}
+
+.join-meeting.hide {
+    display: none;
+}
+
+webview {
+    height: 100%;
+}
+
+.webview-container {
+    overflow: hidden;
+}
+
+webview.hide {
+    display: none;
+}
+
+.console-controls.hide {
+    display: none;
+}
+
+.console-controls {
+    position: relative;
+    background: #201f1f;
+    width: 100%;
+    z-index: 9999;
+    height: 144px;
+    bottom: 0px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.exit-meeting-btn {
+
+    color: rgb(215, 70, 84);
+    font-family: SegoeUI-Semibold;
+    font-size: 18px;
+    width: 200px;
+    cursor: pointer;
+    padding: 12px;
+    font-weight: 600;
+    text-align: center;
+    letter-spacing: 0px;
+    line-height: 24px;
+    background: rgba(37, 36, 36, 0);
+    border-radius: 2px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0px 2px 4px -0.75px rgba(0, 0, 0, 0.1);
+}
+
+.pretty input:not([type="checkbox"]):not([type="radio"]) {
+    display: none;
+}
+
+.pretty {
+    position: relative;
+    display: inline-block;
+    margin-right: 1em;
+    white-space: nowrap;
+    line-height: 1;
+    padding-left: 15px;
+}
+
+.pretty input {
+    position: absolute;
+    left: 0;
+    top: 0;
+    min-width: 1em;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    opacity: 0;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+}
+
+.pretty .state label {
+    position: initial;
+    display: inline-block;
+    font-weight: 400;
+    margin: 0;
+    color: #fff;
+    text-indent: 1.5em;
+    min-width: calc(1em + 2px);
+}
+
+.pretty.p-switch .state label {
+    text-indent: 2.5em;
+}
+
+.pretty.p-switch .state {
+    position: relative;
+}
+
+.pretty.p-switch .state:before {
+    content: "";
+    border-radius: 60px;
+    background: #6264a7;
+    width: 2em;
+    box-sizing: unset;
+    height: calc(1em + 2px);
+    position: absolute;
+    top: 0;
+    top: calc((0% - (100% - 1em)) - 2%);
+    z-index: 0;
+    transition: all 0.5s ease;
+}
+
+.pretty .state label:after,
+.pretty .state label:before {
+    content: "";
+    width: calc(1em + 2px);
+    height: calc(1em + 2px);
+    display: block;
+    box-sizing: border-box;
+    border-radius: 0;
+    border: 1px solid transparent;
+    z-index: 0;
+    position: absolute;
+    left: 0;
+    top: calc((0% - (100% - 1em)) - 1%);
+    background-color: transparent;
+}
+
+.pretty .state label:before {
+    border-color: #bdc3c7;
+}
+
+.pretty .state.p-is-hover,
+.pretty .state.p-is-indeterminate {
+    display: none;
+}
+
+.pretty.p-switch .state label:after,
+.pretty.p-switch .state label:before {
+    transition: all 0.5s ease;
+    border-radius: 100%;
+    left: 0;
+    border-color: transparent;
+    -webkit-transform: scale(0.8);
+    -ms-transform: scale(0.8);
+    transform: scale(0.8);
+}
+
+.pretty.p-switch .state label:after {
+    background-color: #bdc3c7 !important;
+}
+
+.pretty.p-switch .state label:after,
+.pretty.p-switch .state label:before {
+    transition: all 0.5s ease;
+    border-radius: 100%;
+    left: 0;
+    border-color: transparent;
+    -webkit-transform: scale(0.8);
+    -ms-transform: scale(0.8);
+    transform: scale(0.8);
+}
+
+.pretty.p-switch input:checked~.state label:before {
+    opacity: 0;
+}
+
+.pretty.p-switch input:checked~.state label:after {
+    background-color: #fff !important;
+    left: 1em;
+}
+
+.pretty.p-switch .state label:after {
+    background-color: #bdc3c7 !important;
+}
+
+.button-control {
+    list-style: none;
+    color: rgba(134, 137, 146, 0.84);
+    margin: 0;
+    padding: 0;
+    padding-right: 15px;
+    text-align: center;
+}
+
+.button-control li {
+    display: inline;
+    margin-right: 35px;
+
+}
+
+.meeting-info-screen.hide {
+    display: none;
+}
+
+.meeting-info-screen {
+    background: #6264a7;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    padding: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+    flex-direction: column;
+    justify-content: center;
+    top: 0;
+}
+
+.meeting-info-sub {
+    width: 571px;
+    height: 72px;
+    color: rgb(255, 255, 255);
+    font-size: 72px;
+    font-family: SegoeUI-Bold;
+    font-weight: bold;
+    line-height: 72px;
+    margin: 0;
+}
+
+.meeting-info-time {
+    width: 347px;
+    height: 32px;
+    color: rgb(255, 255, 255);
+    font-size: 24px;
+    font-family: SegoeUI;
+    letter-spacing: 0px;
+    line-height: 32px;
+    margin: 0;
+}
+
+.meeting-info-owner {
+    width: 347px;
+    height: 32px;
+    color: rgb(255, 255, 255);
+    font-size: 24px;
+    font-family: SegoeUI;
+    letter-spacing: 0px;
+    line-height: 32px;
+    margin: 0;
+}

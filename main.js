@@ -15,6 +15,7 @@ function createWindow () {
     }
     if (displays[i].bounds.x == 0 && displays[i].bounds.y == 0) {
       consoleWindow = new BrowserWindow({ x: displays[i].bounds.x, y: displays[i].bounds.y, frame: false, webPreferences: { nodeIntegration: true } })
+      consoleWindow.openDevTools();
       consoleWindow.maximize();
       consoleWindow.loadURL('file://' + __dirname + '/index.html');
     }
@@ -22,6 +23,7 @@ function createWindow () {
 
   consoleWindow.on('closed', function () { consoleWindow = null, forWindow = null })
   forWindow.on('closed', function () { forWindow = null, consoleWindow = null })
+  //for window getting undefind we have to work on this logic at a time any one if condtion will excute right we need to modifie
   log.info('Launching app');
 }
 

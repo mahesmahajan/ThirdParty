@@ -1,5 +1,5 @@
 const log = require('electron-log');
-
+const remote = require('electron').remote;
 window.ELECTRONWEBVIEW = window.ELECTRONWEBVIEW || {};
 ELECTRONWEBVIEW.readyStateLoader = function (callback) {
     if (document && document.readyState == 'loading') {
@@ -8,53 +8,54 @@ ELECTRONWEBVIEW.readyStateLoader = function (callback) {
         callback();
     }
 };
-(function () {
+function myTestFunction() {
     var webviewInit = function () {
         log.info('Application statred');
-        const isWebex = true;
-        const isZoom = true;
-        
+        var arguments = remote.getGlobal('sharedObject')?remote.getGlobal('sharedObject').prop1:myUrls;
+        var isWebex = arguments[2].indexOf('zoom')===-1;
+        var isZoom = arguments[2].indexOf('zoom')!==-1;
+        var zoomUrl = arguments[2];
+        var webexUrl = arguments[2]; 
         // Move common element out side of both zoom/webex logic 
         var loader = document.querySelector(".loader");
-        var webviewElement = document.querySelector('webview');
         var consoleControl = document.querySelector('.console-controls');
         var exitMeeting = document.querySelector(".exit-meeting-btn");
         var switchConsole = document.querySelector('.pretty.p-switch input');
         var meetingInfoScreen = document.querySelector('.meeting-info-screen');
+        var webviewContainer = document.querySelector('.webview-container');
+        var webviewElement;
+        loader.classList.remove('connecting');
+
         var getWebView = function (url) {
-            return ` <webview src=${url} autosize preload = "renderer.js" id="foo"  style="min-width: 786px;min-height:80vh"></webview>`;
-        };
-        var showMeetingBtn = function (name) {
-            var webex = document.querySelector(".join-webex");
-            var zoom = document.querySelector(".join-zoom");
-            loader.classList.add('hide');
-            webex.classList.remove("hide");
-            zoom.classList.remove("hide");
+            return `<webview src=${url} autosize preload = "renderer.js" id="foo"  style="min-width: 786px;min-height:80vh"></webview>`;
         };
 
-        var reRender = function () {
-            var webviewElement = document.querySelector('webview');
+        var showMeetingBtn = function (name) {
+            loader.classList.add('connecting');
+        };
+
+        var onQuit = function () {
             // TODO: Cleanup timeout
-            setTimeout(function () {
-                if (webviewElement) {
-                    document.querySelector("webview").remove();
-                }
-                showMeetingBtn();
-            }, 500);
+            win = null;
+            if (webviewElement) {
+                document.querySelector("webview").remove();
+            }
+            if (process.platform !== 'darwin') {
+                 window.close();
+            }
+
         };
 
         // In embedder page
         var bindEvents = function () {
             webviewElement = document.querySelector('webview');
             webviewElement.addEventListener('ipc-message', function (event) {
-                console.log(event.channel);
-                loader.classList.remove("hide");
+                loader.classList.remove("connecting");
                 switch (event.channel) {
                     case 'close meeting':
-                        reRender();
+                        onQuit();
                         break;
                     default:
-                        console.log(event.channel);
                 }
             });
             webviewElement.addEventListener("did-finish-load", loadFinish);
@@ -76,12 +77,12 @@ ELECTRONWEBVIEW.readyStateLoader = function (callback) {
                 showLoader('zoom');
                 log.info('Zoom loaded');
                 executeZoomScript();
-                consoleControl.classList.remove("hide");
+                consoleControl.classList.remove("connecting");
                 webviewElement.send("bind-end-meeting", "zoom");
             } else {
                 executeWebexScript();
                 log.info('Webex loaded');
-                consoleControl.classList.remove("hide");
+                consoleControl.classList.remove("connecting");
                 // TODO: Cleanup timeout
                 setTimeout(function () {
                     webviewElement.send("bind-end-meeting", "webex");
@@ -90,66 +91,45 @@ ELECTRONWEBVIEW.readyStateLoader = function (callback) {
         };
 
         var showLoader = function (name) {
-            var webex = document.querySelector(".join-webex");
-            var zoom = document.querySelector(".join-zoom");
-            name === 'zoom' ? loader.classList.add('hide') : loader.classList.remove('hide');
-            webex.classList.add("hide");
-            zoom.classList.add("hide");
+            name === 'zoom' ? loader.classList.add('connecting') : loader.classList.remove('connecting');
         };
 
         exitMeeting && exitMeeting.addEventListener("click", function () {
-            loader.classList.remove("hide");
-            reRender();
+            loader.classList.remove("connecting");
+            onQuit();
         });
 
         switchConsole && switchConsole.addEventListener('change', function (e) {
             if (e.target.checked) {
-                meetingInfoScreen.classList.remove('hide');
+                meetingInfoScreen.classList.remove('connecting');
             } else {
-                meetingInfoScreen.classList.add('hide');
-                consoleControl.classList.add('hide');
+                meetingInfoScreen.classList.add('connecting');
+                consoleControl.classList.add('connecting');
                 if (webviewElement !== null) {
                     webviewElement.style.minHeight = '100vh';
                 }
             }
         });
 
-        if(isZoom) {
-            var webviewContainer = document.querySelector('.webview-container');
-            var zoom = document.querySelector(".join-zoom");
-            var getwebViewHTML;
-            zoom && zoom.addEventListener('click', function (e) {
-                showLoader('zoom');
-                //getwebViewHTML = getWebView(require('electron').remote.process.argv.slice(1)[0]);
-                getwebViewHTML = getWebView('https://zoom.us/wc/4507475950/join?prefer=1&un=TXIuUmlnZWw=');
-                webviewContainer.innerHTML = getwebViewHTML;
-                bindEvents();
-            });
 
-            var executeZoomScript = function () {
-                // TODO: Cleanup timeout
-                setTimeout(function () {
-                    webviewElement.executeJavaScript(
-                        'document.querySelectorAll(".left-tool-item button")[2].click();'
-                    );
-                }, 20000);
-            };
+        var executeZoomScript = function () {
+            // TODO: Cleanup timeout
+            setTimeout(function () {
+                webviewElement.executeJavaScript(
+                    'document.querySelectorAll(".left-tool-item button")[2].click();'
+                );
+            }, 20000);
+        };
+
+        if(isZoom) {
+            showLoader('zoom');
+            webviewContainer.innerHTML = getWebView(zoomUrl);
+            bindEvents();
         }
 
         if(isWebex) {
-            var webex = document.querySelector(".join-webex");
-            var loader = document.querySelector(".loader");
-            var webviewContainer = document.querySelector('.webview-container');
-            var webviewElement = document.querySelector('webview');
-            var getwebViewHTML; 
-
-            webex && webex.addEventListener('click', function (e) {
-                showLoader();
-                getwebViewHTML = getWebView('https://hanitsaffting-f117-ae9b.my.webex.com/hanitsaffting-f117-ae9b.my/j.php?MTID=m8befee18b15366004c841cf46e3cb9b1');
-                webviewContainer.innerHTML = getwebViewHTML;
-                bindEvents();
-            });
-
+            webviewContainer.innerHTML = getWebView(webexUrl);
+            bindEvents();
             var executeWebexScript = function (flag) {
                 if (!flag) {
                     // TODO: Cleanup timeout
@@ -183,7 +163,7 @@ ELECTRONWEBVIEW.readyStateLoader = function (callback) {
                     }, 1000);
                     // TODO: Cleanup timeout
                     setTimeout(function () {
-                        loader.classList.add("hide");
+                        loader.classList.add("connecting");
                     }, 4500);
                 }
             };
@@ -191,4 +171,4 @@ ELECTRONWEBVIEW.readyStateLoader = function (callback) {
         }
     };
     ELECTRONWEBVIEW.readyStateLoader(webviewInit);
-})();
+}

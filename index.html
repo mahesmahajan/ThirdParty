@@ -6,13 +6,15 @@
     <link rel="stylesheet" href="./styles.css" /> 
 </head>
 
-<body class="container">
-    <div class="loader hide"></div>
-    <button class="join-meeting join-webex">Join Webex</button>
-    <button class="join-meeting join-zoom">Join Zoom</button>
+<body class="container" onload="myTestFunction()">
+    <div class="loader connecting">
+        <span>Connecting........</span>
+    </div>
+    <!-- <button class="join-meeting join-webex">Join</button>
+    <button class="join-meeting join-zoom">Join Zoom</button> -->
     <div>
         <div class="webview-container"></div>
-        <div class="meeting-info-screen hide">
+        <div class="meeting-info-screen connecting">
             <h4 class="meeting-info-sub"></h4>
             <p class="meeting-info-time"></p>
             <p class="meeting-info-owner"></p>

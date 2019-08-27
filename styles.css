@@ -19,7 +19,8 @@ body {
 }
 
 .loader {
-    background-image: url("https://thumbs.gfycat.com/NearAggravatingJabiru-size_restricted.gif");
+    text-emphasis:center;
+    background: #201f1f;
     display: block;
     background-size: cover;
     background-repeat: no-repeat;
@@ -30,11 +31,20 @@ body {
     position: absolute;
 }
 
-.loader.hide {
+.loader span {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    height: 100%;
+    align-items: center;
+    color: #fff;
+}
+
+.loader.connecting {
     display: none;
 }
 
-.join-meeting.hide {
+.join-meeting.connecting {
     display: none;
 }
 
@@ -46,11 +56,11 @@ webview {
     overflow: hidden;
 }
 
-webview.hide {
+webview.connecting {
     display: none;
 }
 
-.console-controls.hide {
+.console-controls.connecting {
     display: none;
 }
 
@@ -223,7 +233,7 @@ webview.hide {
 
 }
 
-.meeting-info-screen.hide {
+.meeting-info-screen.connecting {
     display: none;
 }
 
